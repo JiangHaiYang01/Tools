@@ -1,5 +1,6 @@
 package common
 
+import addLocal
 import androidTestImplementation
 import com.android.build.gradle.*
 import config.AndroidX
@@ -13,6 +14,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.plugins.PluginContainer
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.project
 import testImplementation
 
 /**
@@ -23,11 +25,13 @@ import testImplementation
  * @version: 1.0.0
  */
 abstract class BasePlugin : Plugin<Project> {
-    private var actionApp: (Project.() -> Unit)? = null
+    private var actionApp: (DependencyHandler.() -> Unit)? = null
 
-    private var actionLibrary: (Project.() -> Unit)? = null
+    private var actionLibrary: (DependencyHandler.() -> Unit)? = null
 
-    private var actionCommon: (Project.() -> Unit)? = null
+    private var actionCommon: (DependencyHandler.() -> Unit)? = null
+
+    private var actionPlugin: (PluginContainer.() -> Unit)? = null
 
     override fun apply(project: Project) {
         onCreate(project)
@@ -55,14 +59,18 @@ abstract class BasePlugin : Plugin<Project> {
         applyCommon(project)
         // 公共 android 配置项
         project.extensions.getByType<LibraryExtension>().applyLibraryCommons()
-        actionLibrary?.invoke(project)
+        actionLibrary?.invoke(project.dependencies)
     }
 
     private fun applyApp(project: Project) {
         applyCommon(project)
         // 公共 android 配置项
         project.extensions.getByType<AppExtension>().applyAppCommons()
-        actionApp?.invoke(project)
+//        project.dependencies.apply {
+////            add("implementation", (project(":test")))
+//            addLocal("test")
+//        }
+        actionApp?.invoke(project.dependencies)
     }
 
     private fun applyCommon(project: Project) {
@@ -70,7 +78,6 @@ abstract class BasePlugin : Plugin<Project> {
         project.applyCommonPlugin()
         // 公共依赖
         project.applyCommonDependencies()
-        actionCommon?.invoke(project)
     }
 
     /**
@@ -81,6 +88,7 @@ abstract class BasePlugin : Plugin<Project> {
             add("api", fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
             applyTestDependencies()
             applyCommonDependencies()
+            actionCommon?.invoke(this)
         }
     }
 
@@ -107,6 +115,7 @@ abstract class BasePlugin : Plugin<Project> {
         plugins.apply("kotlin-android")
         plugins.apply("kotlin-kapt")
         plugins.apply("org.jetbrains.kotlin.android")
+        actionPlugin?.invoke(plugins)
     }
 
     /**
@@ -138,6 +147,7 @@ abstract class BasePlugin : Plugin<Project> {
             versionName = BuildConfig.versionName
 
             testInstrumentationRunner = BuildConfig.runner
+            consumerProguardFiles("consumer-rules.pro")
         }
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_1_8
@@ -145,15 +155,19 @@ abstract class BasePlugin : Plugin<Project> {
         }
     }
 
-    fun addAppPlugin(action: Project.() -> Unit) {
+    fun addAppPlugin(action: DependencyHandler.() -> Unit) {
         actionApp = action
     }
 
-    fun addLibraryPlugin(action: Project.() -> Unit) {
-        actionApp = action
+    fun addLibraryPlugin(action: DependencyHandler.() -> Unit) {
+        actionLibrary = action
     }
 
-    fun addCommonPlugin(action: Project.() -> Unit) {
+    fun addCommonPlugin(action: DependencyHandler.() -> Unit) {
         actionCommon = action
+    }
+
+    fun addPlugin(action: PluginContainer.() -> Unit) {
+        actionPlugin = action
     }
 }

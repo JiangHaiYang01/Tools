@@ -21,7 +21,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/library/network/http" />
             <option value="$PROJECT_DIR$/library/test/log" />
+            <option value="$PROJECT_DIR$/library/test/test" />
             <option value="$PROJECT_DIR$/sample/test/sample-log" />
             <option value="$PROJECT_DIR$/version" />
           </set>

@@ -4,8 +4,13 @@ rootProject.name = "Tools"
 includeBuild("version")
 
 // 测试相关
+includeModule("library/test", "test")
 includeModule("library/test", "log")
 
+// 网络相关
+includeModule("library/network", "http")
+
+// sample
 includeModule("sample/test", "sample-log")
 
 pluginManagement {

@@ -1,4 +1,5 @@
 import common.BasePlugin
+import config.Google
 import org.gradle.api.Project
 
 /**
@@ -11,7 +12,7 @@ import org.gradle.api.Project
 class VersionPlugin : BasePlugin() {
     override fun onCreate(project: Project) {
         addAppPlugin {
-
+            addLocal("test")
         }
 
         addLibraryPlugin {
@@ -19,6 +20,10 @@ class VersionPlugin : BasePlugin() {
         }
 
         addCommonPlugin {
+
+        }
+
+        addPlugin {
 
         }
     }
