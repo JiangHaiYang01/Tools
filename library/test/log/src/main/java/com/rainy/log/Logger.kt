@@ -26,6 +26,7 @@ object Logger : LoggerImpl {
     /**
      * 创建
      */
+    @JvmStatic
     fun create(application: Application): Builder {
         if (!mCreated.get()) {
             mBuild = Builder(application)
