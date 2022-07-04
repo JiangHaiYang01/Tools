@@ -9,9 +9,11 @@ includeModule("library/test", "log")
 
 // 网络相关
 includeModule("library/network", "http")
+includeModule("library/network", "http-rxjava")
 
 // sample
 includeModule("sample/test", "sample-log")
+includeModule("sample/http", "sample-http")
 
 pluginManagement {
     repositories {
