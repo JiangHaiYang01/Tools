@@ -1,7 +1,7 @@
-package com.rainy.http_rxjava.manager
+package com.rainy.http.rxjava.manager
 
 import com.rainy.http.factory.RetrofitFactory
-import com.rainy.http_rxjava.api.RxJavaService
+import com.rainy.http.rxjava.api.RxJavaService
 import retrofit2.CallAdapter
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 

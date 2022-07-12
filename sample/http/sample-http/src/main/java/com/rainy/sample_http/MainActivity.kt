@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.rainy.http.HttpPlugins
 import com.rainy.http.HttpUtils
-import com.rainy.http.request.addHeard
-import com.rainy.http_rxjava.manager.RxJavaFactory
-import com.rainy.http_rxjava.request.asResponse
+import com.rainy.http.request.addParam
+import com.rainy.http.rxjava.manager.RxJavaFactory
+import com.rainy.http.rxjava.request.asResponse
 import com.rainy.test.ui.SampleAct
 import okhttp3.logging.HttpLoggingInterceptor
 
@@ -38,9 +38,9 @@ class MainActivity : SampleAct() {
 
         addClick("post") {
             HttpUtils.post("user/login")
-                .addHeard("username","rainy")
-                .addHeard("password","123456")
-                .asResponse<String>()
+                .addParam("username","rainy")
+                .addParam("password","123456")
+                .asResponse<String>(this)
                 .subscribe { data, error ->
                     Log.i(TAG, "get data:$data")
                     Log.i(TAG, "get error:$error")

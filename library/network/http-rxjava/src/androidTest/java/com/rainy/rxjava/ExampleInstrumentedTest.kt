@@ -1,4 +1,4 @@
-package com.rainy.http_rxjava
+package com.rainy.rxjava
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

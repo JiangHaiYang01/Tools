@@ -1,4 +1,4 @@
-package com.rainy.http_rxjava
+package com.rainy.rxjava
 
 import org.junit.Test
 

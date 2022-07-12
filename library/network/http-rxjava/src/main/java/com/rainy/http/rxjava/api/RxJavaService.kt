@@ -1,4 +1,4 @@
-package com.rainy.http_rxjava.api
+package com.rainy.http.rxjava.api
 
 import io.reactivex.rxjava3.core.Single
 import okhttp3.RequestBody
