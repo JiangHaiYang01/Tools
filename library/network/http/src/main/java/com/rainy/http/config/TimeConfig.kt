@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
  * @date: 2022/7/2 21:48
  * @version: 1.0.0
  */
-abstract class TimeConfig {
+open class TimeConfig {
     private companion object {
         const val DEFAULT_TIME = 10L
     }

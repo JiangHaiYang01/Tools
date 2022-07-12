@@ -7,6 +7,5 @@ android {
     }
 }
 dependencies {
-    implementation(project(":http"))
-    implementation(project(":http-rxjava"))
+    api(project(":http-rxjava"))
 }

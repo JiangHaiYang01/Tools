@@ -13,13 +13,13 @@ data class HttpConfig(
     var baseUrl: String = "",
 
     /** 连接超时 */
-    var connectTime: TimeConfig = DefTimeConfig(),
+    var connectTime: TimeConfig = TimeConfig(),
 
     /** 写入超时 */
-    var writeTime: TimeConfig = DefTimeConfig(),
+    var writeTime: TimeConfig = TimeConfig(),
 
     /** 读取超时 */
-    var readTime: TimeConfig = DefTimeConfig(),
+    var readTime: TimeConfig = TimeConfig(),
 
     /** 配置通用的请求头 */
     var heard: HashMap<String, String> = HashMap(),
