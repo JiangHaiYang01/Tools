@@ -15,7 +15,7 @@ import okhttp3.logging.HttpLoggingInterceptor
  * @date: 2022/7/3 00:31
  * @version: 1.0.0
  */
-object HttpPlugins {
+object HttpConfig {
     fun setBaseUrl(url: String) = apply { HttpManager.config.baseUrl = url }
 
     fun setFactory(factory: Factory) = apply { HttpManager.factory = factory }
@@ -26,6 +26,18 @@ object HttpPlugins {
 
     fun setLogLevel(level: HttpLoggingInterceptor.Level) =
         apply { HttpManager.level = level }
+
+    fun addHeard(key: String, value: String) = apply {
+        HttpManager.config.heard[key] = value
+    }
+
+    fun addHeard(map: HashMap<String, String>) = apply {
+        map.forEach { (key, value) -> addHeard(key, value) }
+    }
+
+    fun addLogInterceptor(action: (String) -> Unit) = apply {
+        HttpManager.logList.add(action)
+    }
 
     fun init(context: Context): Boolean {
         val factory = HttpManager.factory

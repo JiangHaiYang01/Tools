@@ -14,4 +14,10 @@ object HttpUtils {
     fun get(path: String): Request = Request(RequestMode.GET, path)
 
     fun post(path: String): Request = Request(RequestMode.POST, path)
+
+    fun delete(path: String): Request = Request(RequestMode.DELETE, path)
+
+    fun put(path: String): Request = Request(RequestMode.PUT, path)
+
+    fun form(path: String): Request = Request(RequestMode.FORM, path)
 }

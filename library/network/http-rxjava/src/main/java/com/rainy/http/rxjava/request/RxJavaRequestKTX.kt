@@ -5,6 +5,7 @@ import com.rainy.http.HttpManager
 import com.rainy.http.ktx.asClazz
 import com.rainy.http.request.Request
 import com.rainy.http.request.RequestMode
+import com.rainy.http.request.asRequestBody
 import com.rainy.http.rxjava.api.RxJavaService
 import com.rainy.http.rxjava.manager.RxJavaFactory
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -44,7 +45,14 @@ fun <T : Any> runRxJavaCatching(action: () -> Single<T>): Single<T> {
 fun Request.execute(rxJavaService: RxJavaService): Single<ResponseBody> {
     return when (type) {
         RequestMode.GET -> rxJavaService.doGet(headers = head, url = path)
-        RequestMode.POST -> rxJavaService.doPost(headers = head, params = params, path = path)
+        RequestMode.FORM -> rxJavaService.doPost(headers = head, params = params, path = path)
+        RequestMode.PUT -> rxJavaService.doPut(headers = head, maps = params, path = path)
+        RequestMode.DELETE -> rxJavaService.doDelete(headers = head, maps = params, path = path)
+        RequestMode.POST -> rxJavaService.doBody(
+            headers = head,
+            body = params.asRequestBody(),
+            path = path
+        )
         else -> throw Throwable("invalid type")
     }
 }

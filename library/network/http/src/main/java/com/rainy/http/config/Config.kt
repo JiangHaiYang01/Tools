@@ -7,7 +7,7 @@ package com.rainy.http.config
  * @date: 2021年08月07日 1:23 下午
  * @version: 1.0.0
  */
-data class HttpConfig(
+data class Config(
 
     /** baseUrl */
     var baseUrl: String = "",

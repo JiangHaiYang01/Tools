@@ -2,9 +2,11 @@ package com.rainy.sample_http
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.rainy.http.HttpPlugins
+import com.rainy.http.HttpConfig
 import com.rainy.http.HttpUtils
+import com.rainy.http.request.addHeard
 import com.rainy.http.request.addParam
+import com.rainy.http.request.setUrl
 import com.rainy.http.rxjava.manager.RxJavaFactory
 import com.rainy.http.rxjava.request.asResponse
 import com.rainy.test.ui.SampleAct
@@ -17,13 +19,17 @@ class MainActivity : SampleAct() {
 
     @SuppressLint("CheckResult")
     override fun onCreate() {
-        HttpPlugins
+        HttpConfig
             .setBaseUrl("https://www.wanandroid.com")
             .setFactory(RxJavaFactory())
             .setDebug(true)
-            .setLogLevel(HttpLoggingInterceptor.Level.BASIC)
+            .setLogLevel(HttpLoggingInterceptor.Level.BODY)
             .setErrorHandler {
                 Log.e(TAG, "error:${it.message}")
+            }
+            .addHeard("x-common", "uuid")
+            .addLogInterceptor {
+                // Log.i(TAG, "--->$it")
             }
             .init(applicationContext)
 
@@ -38,8 +44,10 @@ class MainActivity : SampleAct() {
 
         addClick("post") {
             HttpUtils.post("user/login")
-                .addParam("username","rainy")
-                .addParam("password","123456")
+                .addParam("username", "rainy")
+                .addParam("password", "123456")
+                .setUrl("http://xxxxx")
+                .addHeard("x-type", "post")
                 .asResponse<String>(this)
                 .subscribe { data, error ->
                     Log.i(TAG, "get data:$data")

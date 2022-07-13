@@ -2,8 +2,10 @@ package com.rainy.http.factory
 
 import android.content.Context
 import com.rainy.http.HttpManager
-import com.rainy.http.config.HttpConfig
+import com.rainy.http.config.Config
+import com.rainy.http.interceptor.BasicHeardInterceptor
 import com.rainy.http.interceptor.LogInterceptor
+import com.rainy.http.interceptor.ReplaceUrlInterceptor
 import com.rainy.http.utils.printLog
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
@@ -18,7 +20,7 @@ import retrofit2.Retrofit
  */
 abstract class RetrofitFactory<T> : Factory() {
     private lateinit var retrofit: Retrofit
-    private lateinit var config: HttpConfig
+    private lateinit var config: Config
 
     companion object {
         private const val TAG = "RetrofitFactory"
@@ -26,9 +28,13 @@ abstract class RetrofitFactory<T> : Factory() {
 
     override fun onCreate(context: Context) {
         printLog(TAG, "create retrofit factory")
-        config = HttpManager.config
-        val client = buildOkHttpClient(context)
-        retrofit = createRetrofit(client)
+        kotlin.runCatching {
+            config = HttpManager.config
+            val client = buildOkHttpClient()
+            retrofit = createRetrofit(client)
+        }.onFailure {
+            HttpManager.errorAction?.invoke(it)
+        }
     }
 
     private fun createRetrofit(okHttpBuilder: OkHttpClient.Builder): Retrofit {
@@ -42,7 +48,7 @@ abstract class RetrofitFactory<T> : Factory() {
      * 创建OkHttpClient
      * @return OkHttpClient.Builder
      */
-    private fun buildOkHttpClient(context: Context): OkHttpClient.Builder {
+    private fun buildOkHttpClient(): OkHttpClient.Builder {
         val okHttpBuilder = OkHttpClient.Builder()
         // 读写超时
         okHttpBuilder.connectTimeout(config.connectTime.time, config.connectTime.timeUnit)
@@ -51,13 +57,13 @@ abstract class RetrofitFactory<T> : Factory() {
 
         // 添加日志拦截器
         okHttpBuilder.addNetworkInterceptor(LogInterceptor.register(HttpManager.level))
-
-//        // 动态替换BaseUrl
-//        okHttpBuilder.addInterceptor(ReplaceBaseUrlInterceptor())
+        // 添加公共请求头
+        okHttpBuilder.addInterceptor(BasicHeardInterceptor.register(config.heard))
+        // 动态替换BaseUrl
+        okHttpBuilder.addInterceptor(ReplaceUrlInterceptor())
 //        // 动态替换连接超时
 //        okHttpBuilder.addInterceptor(ReplaceTimeInterceptor())
-//        // 添加公共请求头
-//        okHttpBuilder.addInterceptor(BasicHeardInterceptor.register(HttpPlugins.getHeard()))
+
         return okHttpBuilder
     }
 

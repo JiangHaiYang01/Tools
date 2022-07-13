@@ -15,9 +15,12 @@ object LogInterceptor {
     private const val TAG = "LogInterceptor"
 
     fun register(level: HttpLoggingInterceptor.Level): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor {
+        return HttpLoggingInterceptor { info ->
             if (HttpManager.debug) {
-                printLog(TAG, it)
+                printLog(TAG, info)
+            }
+            HttpManager.logList.forEach {
+                it.invoke(info)
             }
         }.apply {
             setLevel(level)
