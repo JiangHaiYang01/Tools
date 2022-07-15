@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.rainy.http.factory.Factory
+import com.rainy.http.utils.inlineError
 import okhttp3.logging.HttpLoggingInterceptor
 
 
@@ -42,11 +43,11 @@ object HttpConfig {
     fun init(context: Context): Boolean {
         val factory = HttpManager.factory
         if (factory == null) {
-            HttpManager.errorAction?.invoke(Throwable("factory is must set"))
+            inlineError(Throwable("factory is must set"))
             return false
         }
         if (!checkPermission(context)) {
-            HttpManager.errorAction?.invoke(Throwable("missing INTERNET permission"))
+            inlineError(Throwable("missing INTERNET permission"))
             return false
         }
         factory.onCreate(context)

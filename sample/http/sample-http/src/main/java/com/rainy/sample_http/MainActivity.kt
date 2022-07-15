@@ -8,6 +8,7 @@ import com.rainy.http.request.addHeard
 import com.rainy.http.request.addParam
 import com.rainy.http.request.setUrl
 import com.rainy.http.rxjava.manager.RxJavaFactory
+import com.rainy.http.rxjava.request.asDownLoad
 import com.rainy.http.rxjava.request.asResponse
 import com.rainy.test.ui.SampleAct
 import okhttp3.logging.HttpLoggingInterceptor
@@ -53,6 +54,11 @@ class MainActivity : SampleAct() {
                     Log.i(TAG, "get data:$data")
                     Log.i(TAG, "get error:$error")
                 }
+        }
+
+        addClick("download") {
+            HttpUtils.downLoad("user/login")
+                .asDownLoad()
         }
     }
 }

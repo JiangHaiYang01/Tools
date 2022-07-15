@@ -3,7 +3,7 @@ package com.rainy.http.request
 import android.text.TextUtils
 import com.rainy.http.HttpManager
 import com.rainy.http.interceptor.ReplaceUrlInterceptor
-import com.rainy.http.utils.printLog
+import com.rainy.http.utils.inlinePrintLog
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -24,21 +24,27 @@ class Request constructor(@RequestMode val type: Int, val path: String) {
     val params = HashMap<String, Any>()
 }
 
+/**
+ * 添加请求头
+ */
 fun Request.addHeard(key: String, value: String) = apply {
     head[key] = value
 }
 
+/**
+ * 添加参数
+ */
 fun Request.addParam(key: String, value: String) = apply {
     params[key] = value
 }
 
+/**
+ * 动态切换baseUrl
+ */
 fun Request.setUrl(url: String) = apply {
     if (TextUtils.isEmpty(url)) {
-        printLog(Request.TAG, "new base url is invalid")
+        inlinePrintLog(Request.TAG, "new base url is invalid")
         return@apply
     }
     addHeard(ReplaceUrlInterceptor.DYNAMIC_BASE_URL, url)
 }
-
-fun HashMap<String, Any>.asRequestBody(): RequestBody =
-    HttpManager.gson.toJson(this).toRequestBody("application/json".toMediaTypeOrNull())

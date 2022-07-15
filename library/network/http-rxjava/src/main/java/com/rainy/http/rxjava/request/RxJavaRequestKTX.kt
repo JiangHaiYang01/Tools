@@ -1,13 +1,17 @@
 package com.rainy.http.rxjava.request
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.rainy.http.HttpManager
 import com.rainy.http.ktx.asClazz
 import com.rainy.http.request.Request
 import com.rainy.http.request.RequestMode
-import com.rainy.http.request.asRequestBody
 import com.rainy.http.rxjava.api.RxJavaService
 import com.rainy.http.rxjava.manager.RxJavaFactory
+import com.rainy.http.utils.asRequestBody
+import com.rainy.http.utils.inlineError
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -24,20 +28,31 @@ import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
 
 inline fun <reified T : Any> Request.asResponse(owner: LifecycleOwner? = null): Single<T> {
     return runRxJavaCatching {
-        val factory = HttpManager.factory
-        if (factory !is RxJavaFactory) {
-            throw Throwable("this is not RxJava Factory")
-        }
-        val rxJavaService = factory.getService()
-        execute(rxJavaService).aWait().bindUntilEvent(owner).map { it.asClazz<T>() }
+        execute(getRxjavaService()).aWait().bindUntilEvent(owner).map { it.asClazz<T>() }
     }
+}
+
+fun Request.asDownLoad(){
+    val uploadWorkRequest: WorkRequest =
+        OneTimeWorkRequestBuilder<RxDownloadWorker>().build()
+    WorkManager
+        .getInstance()
+        .enqueue(uploadWorkRequest)
+}
+
+fun getRxjavaService(): RxJavaService {
+    val factory = HttpManager.factory
+    if (factory !is RxJavaFactory) {
+        throw Throwable("this is not RxJava Factory")
+    }
+    return factory.getService()
 }
 
 fun <T : Any> runRxJavaCatching(action: () -> Single<T>): Single<T> {
     return try {
         action.invoke()
     } catch (error: Throwable) {
-        HttpManager.errorAction?.invoke(error)
+        inlineError(error)
         Single.error(error)
     }
 }

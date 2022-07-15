@@ -1,7 +1,7 @@
 package com.rainy.http.interceptor
 
 import com.rainy.http.HttpManager
-import com.rainy.http.utils.printLog
+import com.rainy.http.utils.inlinePrintLog
 import okhttp3.logging.HttpLoggingInterceptor
 
 /**
@@ -17,7 +17,7 @@ object LogInterceptor {
     fun register(level: HttpLoggingInterceptor.Level): HttpLoggingInterceptor {
         return HttpLoggingInterceptor { info ->
             if (HttpManager.debug) {
-                printLog(TAG, info)
+                inlinePrintLog(TAG, info)
             }
             HttpManager.logList.forEach {
                 it.invoke(info)

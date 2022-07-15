@@ -6,7 +6,8 @@ import com.rainy.http.config.Config
 import com.rainy.http.interceptor.BasicHeardInterceptor
 import com.rainy.http.interceptor.LogInterceptor
 import com.rainy.http.interceptor.ReplaceUrlInterceptor
-import com.rainy.http.utils.printLog
+import com.rainy.http.utils.inlineError
+import com.rainy.http.utils.inlinePrintLog
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
@@ -27,13 +28,13 @@ abstract class RetrofitFactory<T> : Factory() {
     }
 
     override fun onCreate(context: Context) {
-        printLog(TAG, "create retrofit factory")
+        inlinePrintLog(TAG, "create retrofit factory")
         kotlin.runCatching {
             config = HttpManager.config
             val client = buildOkHttpClient()
             retrofit = createRetrofit(client)
         }.onFailure {
-            HttpManager.errorAction?.invoke(it)
+            inlineError(it)
         }
     }
 

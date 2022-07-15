@@ -11,13 +11,15 @@ import com.rainy.http.request.RequestMode
  */
 object HttpUtils {
 
-    fun get(path: String): Request = Request(RequestMode.GET, path)
+    fun get(path: String) = Request(RequestMode.GET, path)
 
-    fun post(path: String): Request = Request(RequestMode.POST, path)
+    fun post(path: String) = Request(RequestMode.POST, path)
 
-    fun delete(path: String): Request = Request(RequestMode.DELETE, path)
+    fun delete(path: String) = Request(RequestMode.DELETE, path)
 
-    fun put(path: String): Request = Request(RequestMode.PUT, path)
+    fun put(path: String) = Request(RequestMode.PUT, path)
 
-    fun form(path: String): Request = Request(RequestMode.FORM, path)
+    fun form(path: String) = Request(RequestMode.FORM, path)
+
+    fun downLoad(url: String) = Request(RequestMode.DOWNLOAD, url)
 }

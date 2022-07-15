@@ -1,6 +1,6 @@
 package com.rainy.http.interceptor
 
-import com.rainy.http.HttpManager
+import com.rainy.http.utils.inlineError
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -36,7 +36,7 @@ class ReplaceUrlInterceptor : Interceptor {
             scheme(list.first().second, builder)
             host(list.first().second, builder)
         }.onFailure {
-            HttpManager.errorAction?.invoke(it)
+            inlineError(it)
         }
         val newRequest = request.newBuilder()
             .removeHeader(DYNAMIC_BASE_URL)
