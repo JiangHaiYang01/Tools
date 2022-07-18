@@ -15,7 +15,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
  * @date: 2022/7/2 21:42
  * @version: 1.0.0
  */
-class Request constructor(@RequestMode val type: Int, val path: String) {
+open class Request constructor(@RequestMode val type: Int, val path: String) {
     companion object {
         const val TAG = "Request"
     }

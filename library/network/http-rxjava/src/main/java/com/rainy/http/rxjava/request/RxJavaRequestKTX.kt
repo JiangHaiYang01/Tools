@@ -1,6 +1,8 @@
 package com.rainy.http.rxjava.request
 
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
+import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
@@ -10,6 +12,7 @@ import com.rainy.http.request.Request
 import com.rainy.http.request.RequestMode
 import com.rainy.http.rxjava.api.RxJavaService
 import com.rainy.http.rxjava.manager.RxJavaFactory
+import com.rainy.http.utils.DownRequest
 import com.rainy.http.utils.asRequestBody
 import com.rainy.http.utils.inlineError
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -32,13 +35,32 @@ inline fun <reified T : Any> Request.asResponse(owner: LifecycleOwner? = null): 
     }
 }
 
-fun Request.asDownLoad(){
-    val uploadWorkRequest: WorkRequest =
-        OneTimeWorkRequestBuilder<RxDownloadWorker>().build()
-    WorkManager
-        .getInstance()
-        .enqueue(uploadWorkRequest)
+fun Request.asDownLoad(owner: LifecycleOwner) {
+    val uploadWorkRequest = createRequest(path)
+    WorkManager.getInstance().enqueue(uploadWorkRequest)
+
+    WorkManager.getInstance()
+        .getWorkInfoByIdLiveData(uploadWorkRequest.id)
+        .observe(owner) {
+            Log.d("outputData", "----------->$it")
+            it.progress.getString("progress")
+        }
 }
+
+private fun createRequest(request: DownRequest): WorkRequest {
+    return OneTimeWorkRequestBuilder<RxDownloadWorker>()
+        .setInputData(createInputData(request))
+        .build()
+}
+
+private fun createInputData(request: DownRequest): Data {
+    return Data.Builder()
+        .putString(RxDownloadWorker.URL, request.url)
+        .putString(RxDownloadWorker.DEST, request.destPath)
+//        .putString(RxDownloadWorker.NAME, request.name)
+        .build()
+}
+
 
 fun getRxjavaService(): RxJavaService {
     val factory = HttpManager.factory

@@ -24,7 +24,7 @@ class MainActivity : SampleAct() {
             .setBaseUrl("https://www.wanandroid.com")
             .setFactory(RxJavaFactory())
             .setDebug(true)
-            .setLogLevel(HttpLoggingInterceptor.Level.BODY)
+            .setLogLevel(HttpLoggingInterceptor.Level.NONE)
             .setErrorHandler {
                 Log.e(TAG, "error:${it.message}")
             }
@@ -57,8 +57,8 @@ class MainActivity : SampleAct() {
         }
 
         addClick("download") {
-            HttpUtils.downLoad("user/login")
-                .asDownLoad()
+            HttpUtils.downLoad("https://c-ssl.dtstatic.com/uploads/blog/202104/24/20210424092725_d1de2.thumb.1000_0.jpeg")
+                .asDownLoad(this)
         }
     }
 }
