@@ -1,6 +1,7 @@
 package com.rainy.http
 
 import android.Manifest
+import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
@@ -40,17 +41,18 @@ object HttpConfig {
         HttpManager.logList.add(action)
     }
 
-    fun init(context: Context): Boolean {
+    fun init(application: Application): Boolean {
         val factory = HttpManager.factory
         if (factory == null) {
             inlineError(Throwable("factory is must set"))
             return false
         }
-        if (!checkPermission(context)) {
+        if (!checkPermission(application)) {
             inlineError(Throwable("missing INTERNET permission"))
             return false
         }
-        factory.onCreate(context)
+        HttpManager.context = application
+        factory.onCreate(application)
         return true
     }
 

@@ -22,7 +22,7 @@ fun ResponseBody.save2File(
         inlinePrintLog(TAG, "create file path:${file.path}")
         file.mkdirs()
     }
-    File(request.destPath).save(
+    File(request.destPath + File.separator + request.name).save(
         source = this.source(),
         total = this.contentLength(),
         bufferSize = request.bufferSize,
@@ -71,9 +71,14 @@ data class DownRequest(
     // 下载文件的位置
     val destPath: String,
 
+    // 下载地址
+    val url: String,
+
+    // 文件名称
+    val name: String,
+
     // buffer 大小
     val bufferSize: Long = 1024L,
 
-    // 下载地址
-    val url: String,
+    val tag: String? = null
 )

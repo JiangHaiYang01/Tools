@@ -6,12 +6,13 @@ import com.rainy.http.HttpConfig
 import com.rainy.http.HttpUtils
 import com.rainy.http.request.addHeard
 import com.rainy.http.request.addParam
+import com.rainy.http.request.asDownLoad
 import com.rainy.http.request.setUrl
 import com.rainy.http.rxjava.manager.RxJavaFactory
-import com.rainy.http.rxjava.request.asDownLoad
 import com.rainy.http.rxjava.request.asResponse
 import com.rainy.test.ui.SampleAct
 import okhttp3.logging.HttpLoggingInterceptor
+import java.io.File
 
 class MainActivity : SampleAct() {
     companion object {
@@ -32,7 +33,7 @@ class MainActivity : SampleAct() {
             .addLogInterceptor {
                 // Log.i(TAG, "--->$it")
             }
-            .init(applicationContext)
+            .init(application)
 
         addClick("get") {
             HttpUtils.get("friend/json")
@@ -57,8 +58,10 @@ class MainActivity : SampleAct() {
         }
 
         addClick("download") {
-            HttpUtils.downLoad("https://c-ssl.dtstatic.com/uploads/blog/202104/24/20210424092725_d1de2.thumb.1000_0.jpeg")
-                .asDownLoad(this)
+            val destPath = getExternalFilesDir(null)?.path + File.separator + "download"
+            HttpUtils.downLoad("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+                .asDownLoad(this, destPath, "meinv.mp4")
+
         }
     }
 }

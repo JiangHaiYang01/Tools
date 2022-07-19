@@ -19,3 +19,7 @@ fun runUIThread(action: () -> Unit) {
         action.invoke()
     }
 }
+
+fun postDelayed(delay: Long, action: () -> Unit) {
+    handler.postDelayed({ action.invoke() }, delay)
+}
