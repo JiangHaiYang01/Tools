@@ -34,16 +34,19 @@ abstract class DownLoadWorker(appContext: Context, workerParams: WorkerParameter
             val downRequest = DownRequest(destPath, name = name, url = url)
             inlinePrintLog(TAG, "downRequest:$downRequest")
             val responseBody = getResponseBody(downRequest)
-            responseBody.save2File(downRequest) { progress ->
+            responseBody.save2File(downRequest, cancel = {
+                isStopped
+            }, actionProgress = { progress ->
                 val data = workDataOf(
                     KEY_PROGRESS to progress.progress,
                     KEY_CURRENT_SIZE to progress.currentSize,
                     KEY_TOTAL_SIZE to progress.totalSize,
                 )
                 setProgressAsync(data)
-            }
+            })
             return Result.success()
         } catch (throwable: Throwable) {
+            inlinePrintLog(TAG, "download failed:${throwable.message}")
             return Result.failure()
         }
     }

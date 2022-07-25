@@ -78,5 +78,7 @@ abstract class RetrofitFactory<T> : Factory() {
 
     abstract fun getService(): T
 
+    fun getRetrofit(): Retrofit = retrofit
+
     abstract fun getCallAdapterFactory(): CallAdapter.Factory
 }

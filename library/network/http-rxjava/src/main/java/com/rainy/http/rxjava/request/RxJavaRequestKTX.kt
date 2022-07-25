@@ -3,6 +3,7 @@ package com.rainy.http.rxjava.request
 import androidx.lifecycle.LifecycleOwner
 import androidx.work.ListenableWorker
 import com.rainy.http.HttpManager
+import com.rainy.http.interceptor.LogInterceptor
 import com.rainy.http.ktx.asClazz
 import com.rainy.http.request.Request
 import com.rainy.http.request.RequestMode
@@ -16,6 +17,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.ResponseBody
 import com.trello.rxlifecycle4.android.lifecycle.kotlin.bindToLifecycle
+import okhttp3.logging.HttpLoggingInterceptor
 
 /**
  *
@@ -57,6 +59,7 @@ fun <T : Any> runRxJavaCatching(action: () -> Single<T>): Single<T> {
 }
 
 fun Request.execute(rxJavaService: RxJavaService): Single<ResponseBody> {
+    LogInterceptor.setLevel(HttpManager.level)
     return when (type) {
         RequestMode.GET -> rxJavaService.doGet(headers = head, url = path)
         RequestMode.FORM -> rxJavaService.doPost(headers = head, params = params, path = path)

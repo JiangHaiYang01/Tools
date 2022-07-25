@@ -25,7 +25,7 @@ class MainActivity : SampleAct() {
             .setBaseUrl("https://www.wanandroid.com")
             .setFactory(RxJavaFactory())
             .setDebug(true)
-            .setLogLevel(HttpLoggingInterceptor.Level.NONE)
+            .setLogLevel(HttpLoggingInterceptor.Level.BODY)
             .setErrorHandler {
                 Log.e(TAG, "error:${it.message}")
             }
@@ -79,7 +79,7 @@ class MainActivity : SampleAct() {
         }
 
         addClick("cancel with tag") {
-            HttpUtils.donwLoadCancel("tag")
+            HttpUtils.downLoadCancel("tag")
         }
     }
 }

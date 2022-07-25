@@ -14,8 +14,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 object LogInterceptor {
     private const val TAG = "LogInterceptor"
 
+    private lateinit var mInterceptor: HttpLoggingInterceptor
+
     fun register(level: HttpLoggingInterceptor.Level): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor { info ->
+        mInterceptor = HttpLoggingInterceptor { info ->
             if (HttpManager.debug) {
                 inlinePrintLog(TAG, info)
             }
@@ -25,6 +27,11 @@ object LogInterceptor {
         }.apply {
             setLevel(level)
         }
+        return mInterceptor
+    }
+
+    fun setLevel(level: HttpLoggingInterceptor.Level) {
+        mInterceptor.setLevel(level)
     }
 }
 

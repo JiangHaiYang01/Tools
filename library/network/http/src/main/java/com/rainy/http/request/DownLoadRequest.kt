@@ -3,8 +3,10 @@ package com.rainy.http.request
 import androidx.lifecycle.LifecycleOwner
 import androidx.work.*
 import com.rainy.http.HttpManager
+import com.rainy.http.interceptor.LogInterceptor
 import com.rainy.http.response.*
 import com.rainy.http.utils.DownRequest
+import okhttp3.logging.HttpLoggingInterceptor
 
 private const val TAG = "DownLoadRequest"
 
@@ -16,6 +18,8 @@ fun <T : ListenableWorker> Request.doDownLoad(
     bufferSize: Long = 1024L,
     clazz: Class<T>
 ): DownLoadResponse {
+    // 下载不需要日志
+    LogInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE)
     val workRequest = createRequest(
         DownRequest(
             tag = tag,

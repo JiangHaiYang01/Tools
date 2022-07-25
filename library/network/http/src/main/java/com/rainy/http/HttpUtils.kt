@@ -29,11 +29,11 @@ object HttpUtils {
         WorkManager.getInstance(HttpManager.context).cancelAllWork()
     }
 
-    fun donwLoadCancel(tag: String) {
+    fun downLoadCancel(tag: String) {
         WorkManager.getInstance(HttpManager.context).cancelAllWorkByTag(tag)
     }
 
-    fun donwLoadCancel(id: UUID) {
+    fun downLoadCancel(id: UUID) {
         WorkManager.getInstance(HttpManager.context).getWorkInfoByIdLiveData(id)
     }
 }
