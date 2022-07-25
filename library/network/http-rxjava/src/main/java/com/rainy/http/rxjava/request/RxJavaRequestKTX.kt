@@ -1,10 +1,13 @@
 package com.rainy.http.rxjava.request
 
 import androidx.lifecycle.LifecycleOwner
+import androidx.work.ListenableWorker
 import com.rainy.http.HttpManager
 import com.rainy.http.ktx.asClazz
 import com.rainy.http.request.Request
 import com.rainy.http.request.RequestMode
+import com.rainy.http.request.doDownLoad
+import com.rainy.http.response.DownLoadResponse
 import com.rainy.http.rxjava.api.RxJavaService
 import com.rainy.http.rxjava.manager.RxJavaFactory
 import com.rainy.http.utils.*
@@ -27,6 +30,14 @@ inline fun <reified T : Any> Request.asResponse(owner: LifecycleOwner? = null): 
         execute(getRxjavaService()).aWait().bindUntilEvent(owner).map { it.asClazz<T>() }
     }
 }
+
+fun Request.asDownLoad(
+    owner: LifecycleOwner? = null,
+    dest: String,
+    name: String,
+    tag: String? = null,
+    bufferSize: Long = 1024L
+): DownLoadResponse = doDownLoad(owner, dest, name, tag, bufferSize, RxDownloadWorker::class.java)
 
 fun getRxjavaService(): RxJavaService {
     val factory = HttpManager.factory

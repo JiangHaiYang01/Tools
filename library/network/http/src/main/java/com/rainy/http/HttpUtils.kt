@@ -1,7 +1,9 @@
 package com.rainy.http
 
+import androidx.work.WorkManager
 import com.rainy.http.request.Request
 import com.rainy.http.request.RequestMode
+import java.util.UUID
 
 
 /**
@@ -22,4 +24,16 @@ object HttpUtils {
     fun form(path: String) = Request(RequestMode.FORM, path)
 
     fun downLoad(url: String) = Request(RequestMode.DOWNLOAD, url)
+
+    fun downLoadCancelAll() {
+        WorkManager.getInstance(HttpManager.context).cancelAllWork()
+    }
+
+    fun donwLoadCancel(tag: String) {
+        WorkManager.getInstance(HttpManager.context).cancelAllWorkByTag(tag)
+    }
+
+    fun donwLoadCancel(id: UUID) {
+        WorkManager.getInstance(HttpManager.context).getWorkInfoByIdLiveData(id)
+    }
 }

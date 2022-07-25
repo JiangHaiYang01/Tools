@@ -24,9 +24,6 @@ data class Config(
     /** 配置通用的请求头 */
     var heard: HashMap<String, String> = HashMap(),
 
-    /** 日志 */
-//    var log: LogConfig = LogConfig(),
-
     /** 是否是DEBUG */
     var debug :Boolean =  true
 )

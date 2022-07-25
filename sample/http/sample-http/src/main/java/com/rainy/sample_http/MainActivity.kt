@@ -6,9 +6,9 @@ import com.rainy.http.HttpConfig
 import com.rainy.http.HttpUtils
 import com.rainy.http.request.addHeard
 import com.rainy.http.request.addParam
-import com.rainy.http.request.asDownLoad
 import com.rainy.http.request.setUrl
 import com.rainy.http.rxjava.manager.RxJavaFactory
+import com.rainy.http.rxjava.request.asDownLoad
 import com.rainy.http.rxjava.request.asResponse
 import com.rainy.test.ui.SampleAct
 import okhttp3.logging.HttpLoggingInterceptor
@@ -59,9 +59,27 @@ class MainActivity : SampleAct() {
 
         addClick("download") {
             val destPath = getExternalFilesDir(null)?.path + File.separator + "download"
-            HttpUtils.downLoad("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
-                .asDownLoad(this, destPath, "meinv.mp4")
+            val request = HttpUtils.downLoad("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4")
+            request.asDownLoad(this, destPath, "meinv.mp4",tag = "tag")
+                .onSuccess {
+                    Log.i(TAG, "success:${it.path}")
+                }
+                .onFailure {
+                    Log.i(TAG, "failed:${it.throwable}")
+                }
+                .onCancel {
+                    Log.i(TAG, "cancel:${it}")
+                }
+                .onProgress {
+                    Log.i(TAG, "progress:${it.progress}")
+                }
+                .onPause {
+                    Log.i(TAG, "pause:${it}")
+                }
+        }
 
+        addClick("cancel with tag") {
+            HttpUtils.donwLoadCancel("tag")
         }
     }
 }
